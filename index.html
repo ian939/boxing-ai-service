@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>복싱 AI 분석 서비스</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center h-screen">
+    <h1 class="text-4xl font-bold mb-8">🥊 Boxing AI Analyzer</h1>
+    
+    <div id="upload-box" class="bg-gray-800 p-10 rounded-xl shadow-lg text-center border-2 border-dashed border-gray-600">
+        <input type="file" id="videoInput" class="hidden" accept="video/*">
+        <label for="videoInput" class="cursor-pointer">
+            <div class="text-6xl mb-4">📁</div>
+            <p class="text-xl">스파링 영상을 선택하거나 끌어다 놓으세요</p>
+            <p class="text-sm text-gray-400 mt-2">MP4 형식 권장</p>
+        </label>
+        <button onclick="startAnalysis()" class="mt-8 bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-bold transition-all">
+            AI 분석 시작하기
+        </button>
+    </div>
+
+    <div id="loading" class="hidden text-center">
+        <div class="animate-spin text-6xl mb-4">⚙️</div>
+        <p class="text-2xl font-bold">AI 코치가 영상을 분석 중입니다...</p>
+        <p class="text-gray-400 mt-2">약 1~2분 정도 소요될 수 있습니다.</p>
+    </div>
+
+    <script>
+        async function startAnalysis() {
+            const fileInput = document.getElementById('videoInput');
+            if (!fileInput.files[0]) return alert("영상을 선택해주세요!");
+
+            // 화면 전환
+            document.getElementById('upload-box').classList.add('hidden');
+            document.getElementById('loading').classList.remove('hidden');
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                // 백엔드 서버(FastAPI)로 데이터 전송
+                const response = await fetch('http://localhost:8000/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                // 성공 시 리포트 데이터를 로컬 스토리지에 저장하고 이동
+                localStorage.setItem('analysisResult', JSON.stringify(result));
+                window.location.href = 'report.html'; 
+            } catch (error) {
+                alert("분석 중 오류가 발생했습니다.");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
