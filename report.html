@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>복싱 스파링 분석 리포트</title>
+    <script src="https://cdn.tailwindcss.com"></script> </head>
+<body class="bg-gray-900 text-white p-10">
+    <div class="max-w-6xl mx-auto flex gap-10">
+        <div class="w-2/3">
+            <video id="boxingVideo" controls class="w-full rounded-lg border border-gray-700">
+                <source src="output_final.mp4" type="video/mp4"> </video>
+            <div class="mt-5 p-5 bg-gray-800 rounded-lg">
+                <h2 class="text-xl font-bold mb-2">분석 총평</h2>
+                <p id="summary" class="text-gray-400">분석 데이터를 불러오는 중...</p>
+            </div>
+        </div>
+
+        <div class="w-1/3">
+            <h2 class="text-2xl font-bold mb-5">분석 타임라인</h2>
+            <div id="timeline" class="space-y-4">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // 우리가 만든 analysis_result.json의 데이터 예시
+        const data = {
+            "summary": "전반적인 풋워크는 좋으나 잽 이후에 가드가 낮아지는 경향이 있습니다.",
+            "feedbacks": [
+                { "timestamp": "00:05", "issue": "잽 던진 후 오른손 가드가 내려감", "drill": "거울 보고 잽 100번 (가드 고정)" },
+                { "timestamp": "00:15", "issue": "스텝이 엉킴", "drill": "래더 트레이닝 추천" }
+            ]
+        };
+
+        // 데이터를 화면에 뿌려주는 작업
+        document.getElementById('summary').innerText = data.summary;
+        const timeline = document.getElementById('timeline');
+        const video = document.getElementById('boxingVideo');
+
+        data.feedbacks.forEach(item => {
+            const card = document.createElement('div');
+            card.className = "p-4 bg-gray-800 hover:bg-blue-900 cursor-pointer rounded-lg border-l-4 border-blue-500";
+            card.innerHTML = `
+                <span class="text-blue-400 font-bold">${item.timestamp}</span>
+                <p class="font-semibold">${item.issue}</p>
+                <p class="text-sm text-gray-500 mt-2">${item.drill}</p>
+            `;
+            
+            // 클릭 시 해당 시간으로 이동하는 핵심 기능!
+            card.onclick = () => {
+                const [min, sec] = item.timestamp.split(':').map(Number);
+                video.currentTime = min * 60 + sec;
+                video.play();
+            };
+            timeline.appendChild(card);
+        });
+    </script>
+</body>
+</html>

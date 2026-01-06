@@ -1,0 +1,12 @@
+# Python 관련
+__pycache__/
+.env
+venv/
+
+# 영상 데이터 (용량이 크고 개인정보이므로 제외)
+uploads/
+processed/
+*.mp4
+
+# OS 관련
+.DS_Store
