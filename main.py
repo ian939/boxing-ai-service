@@ -32,9 +32,6 @@ os.makedirs(PROCESSED_DIR, exist_ok=True)
 # 정적 파일 서버 설정 (웹 브라우저에서 변환된 영상을 볼 수 있게 함)
 app.mount("/processed", StaticFiles(directory=PROCESSED_DIR), name="processed")
 
-# Gemini 클라이언트 설정
-client = genai.Client(api_key="AIzaSyDbvnUhZVmJqwY5uKdkahs48agzagY4KE4")
-
 # --- 내부 처리 함수들 ---
 
 def add_timecode(input_path, output_path):
